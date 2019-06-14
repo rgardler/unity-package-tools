@@ -22,6 +22,7 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 */
 using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using UnityEditor;
@@ -244,6 +245,26 @@ namespace JCMG.PackageTools.Editor
 			{
 				fi.Delete();
 			}
+		}
+
+		/// <summary>
+		/// Recursive find all files starting at root folder at path <paramref name="folderPath"/>
+		/// and return a list of absolute paths to those files.
+		/// </summary>
+		/// <param name="folderPath"></param>
+		/// <returns></returns>
+		internal static List<string> GetAllFilesRecursively(string folderPath)
+		{
+			var filePaths = new List<string>();
+			filePaths.AddRange(Directory.GetFiles(folderPath));
+
+			var directories = Directory.GetDirectories(folderPath);
+			foreach (var directory in directories)
+			{
+				filePaths.AddRange(GetAllFilesRecursively(directory));
+			}
+
+			return filePaths;
 		}
 	}
 }
